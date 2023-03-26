@@ -2,11 +2,14 @@ package ru.stomprf.main;
 
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
+import com.pengrad.telegrambot.request.SendDocument;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.response.SendResponse;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Properties;
 
 public class Bot {
@@ -18,10 +21,13 @@ public class Bot {
         TelegramBot bot = new TelegramBot(BOT_TOKEN);
 
         bot.setUpdatesListener(updates -> {
-
             updates.forEach(update -> {
                 long chatId = update.message().chat().id();
                 SendResponse response = bot.execute(new SendMessage(chatId, "Hello!"));
+
+                Path path = Path.of("src/main/resources/yeat-upOfX.mp3");
+                path.toFile().renameTo(new File("src/main/resources/yeat-upOfX.mp3"));
+                bot.execute(new SendDocument(chatId, path.toFile()));
             });
 
             return UpdatesListener.CONFIRMED_UPDATES_ALL;
