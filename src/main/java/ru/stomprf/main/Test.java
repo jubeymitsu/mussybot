@@ -1,11 +1,13 @@
 package ru.stomprf.main;
 
-import java.nio.file.Path;
+import com.pengrad.telegrambot.request.SendDocument;
+
+import java.io.File;
 
 public class Test {
 
     public static void main(String[] args) {
-        Path path = Path.of("src/main/resources/yeat-upOfX.mp3");
+
 
     }
 
