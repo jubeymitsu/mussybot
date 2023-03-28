@@ -1,17 +1,25 @@
 package ru.stomprf.main;
 
-import com.gargoylesoftware.htmlunit.WebClient;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import org.htmlunit.WebClient;
+import org.htmlunit.html.HtmlPage;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.Properties;
 
+@Component
 public class Test {
 
-    static String FILE_URL = "https://musify.club/track/dl/12711722/doja-cat-bottom-bitch.mp3";
-    static String FILE_NAME = "/home/james/Desktop/projects/mussybot/src/main/resources/doja_cat-track.mp3";
+    @Autowired
+    private Properties properties;
+
+    //Update later
+//    private String FILE_URL =  properties.getProperty("MUSIC_PATH") + "doja-cat-bottom-bitch.mp3";
+    private String FILE_URL =  "doja-cat-bottom-bitch.mp3";
+    private String FILE_NAME = "/Users/macbookpro/IdeaProjects/music_bot/src/main/resources/music/doja_cat-track.mp3";
 
     public static void main(String[] args) throws IOException {
-
 //        File fileToSave = new File("/doja-track");
 //        String downloadLink = "https://musify.club/track/dl/12711722/doja-cat-bottom-bitch.mp3";
 ////Download file using default org.apache.http client
@@ -22,8 +30,10 @@ public class Test {
 ////Save file on disk
 ////        copyInputStreamToFile(response.getEntity().getContent(), fileToSave);
 
+
         try (final WebClient webClient = new WebClient()) {
             final HtmlPage page = webClient.getPage("https://htmlunit.sourceforge.io/");
+//            Assert.assertEquals("HtmlUnit – Welcome to HtmlUnit", page.getTitleText());
             System.out.println(page.getTitleText());
 
         }

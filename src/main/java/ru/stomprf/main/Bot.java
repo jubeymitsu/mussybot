@@ -5,18 +5,21 @@ import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.request.SendAudio;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.response.SendResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Properties;
 
+@Component
 public class Bot {
 
+    @Autowired
+    private Properties properties;
+
     public static void main(String[] args) throws IOException {
-        Properties properties = new Properties();
-        properties.load(new FileInputStream("src/main/resources/app.properties"));
-        final String BOT_TOKEN = properties.getProperty("BOT_TOKEN");
+        final String BOT_TOKEN = new Bot().properties.getProperty("BOT_TOKEN");
         TelegramBot bot = new TelegramBot(BOT_TOKEN);
 
         bot.setUpdatesListener(updates -> {
