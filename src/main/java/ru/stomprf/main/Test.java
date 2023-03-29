@@ -14,7 +14,7 @@ public class Test {
     @Autowired
     private Properties properties;
 
-    //Update later
+//    Update later
 //    private String FILE_URL =  properties.getProperty("MUSIC_PATH") + "doja-cat-bottom-bitch.mp3";
     private String FILE_URL =  "doja-cat-bottom-bitch.mp3";
     private String FILE_NAME = "/Users/macbookpro/IdeaProjects/music_bot/src/main/resources/music/doja_cat-track.mp3";

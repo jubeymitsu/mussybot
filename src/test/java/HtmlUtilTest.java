@@ -14,7 +14,7 @@ public class HtmlUtilTest {
             webClient.getOptions().setJavaScriptEnabled(false);
             webClient.getOptions().setCssEnabled(false);
             final HtmlPage page = webClient.getPage("https://htmlunit.sourceforge.io/");
-//            Assert.assertEquals("HtmlUnit – Welcome to HtmlUnit", page.getTitleText());
+            Assert.assertEquals("HtmlUnit – Welcome to HtmlUnit", page.getTitleText());
         }
     }
 }
