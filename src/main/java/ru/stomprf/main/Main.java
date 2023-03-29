@@ -1,13 +1,14 @@
 package ru.stomprf.main;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-@SpringBootApplication
 public class Main {
 
+    static {
+        System.setProperty("org.apache.commons.logging.Log",
+                "org.apache.commons.logging.impl.NoOpLog");
+    }
+
+
     public static void main(String[] args) {
-        SpringApplication.run(Main.class, args);
     }
 
 }
