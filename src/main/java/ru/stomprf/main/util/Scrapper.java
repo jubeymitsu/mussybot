@@ -1,19 +1,12 @@
 package ru.stomprf.main.util;
 
 import org.htmlunit.WebClient;
-import org.htmlunit.html.HtmlElement;
-import org.htmlunit.html.HtmlForm;
-import org.htmlunit.html.HtmlPage;
-import org.htmlunit.html.HtmlTextInput;
-import org.htmlunit.javascript.host.event.KeyboardEvent;
+import org.htmlunit.html.*;
 import ru.stomprf.main.Track;
 
-import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.net.MalformedURLException;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -21,53 +14,64 @@ import java.util.Properties;
 public class Scrapper {
 
     private HtmlPage page;
+    private WebClient client;
+    private Properties properties = new Properties();
 
     public Scrapper() {
-
-        Properties properties = new Properties();
-
-
-        try (final WebClient webClient = new WebClient()) {
-            webClient.getOptions().setJavaScriptEnabled(false);
-            webClient.getOptions().setCssEnabled(false);
-            properties.load(new FileInputStream("src/main/resources/app.properties"));
-            String MUSIC_URL =  properties.getProperty("MUSIC_URL");
-            System.out.println(MUSIC_URL);
-            this.page = webClient.getPage(MUSIC_URL);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
+        this.client = new WebClient();
+        this.client.getOptions().setCssEnabled(false);
+        this.client.getOptions().setJavaScriptEnabled(false);
+        try {
+            this.properties.load(new FileInputStream("src/main/resources/app.properties"));
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public List<Track> findFiveTracks(String search){
+    public List<Track> findFiveTracks(String search) {
         List<Track> tracks = new ArrayList<>();
         try {
-            Path path = Path.of("src/main/resources/musify_output.txt");
-            HtmlForm form = (HtmlForm) page.getByXPath("//form").get(0);
+            System.out.println(properties.getProperty("PATTERN") + "doja%20cat");
+            page = client.getPage(properties.getProperty("PATTERN") + "doja%20cat");
+            List<HtmlDivision> list = page.getByXPath("//div[contains(@class, \"playlist\")]//div[@data-url]");
+            downloadTrack(extractLinks(list).get(0));
 
-
-            HtmlElement button = (HtmlElement) page.createElement("button");
-            button.setAttribute("type", "submit");
-            form.appendChild(button);
-            HtmlTextInput searchField = form.getInputByName("SearchText");
-            searchField.click();
-            searchField.type(search);
-            searchField.type(13);
-//            button.click();
-
-            Thread.sleep(500);
-            Files.writeString(path, page.asNormalizedText());
-            int length = page.getByXPath("//data-artist").size();
-            System.out.println("Doja cat values:" + length);
-
-        } catch (IOException | InterruptedException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return null;
-//        return null;
     }
 
+    private List<String> extractLinks(List<HtmlDivision> divisions) {
+        ArrayList<String> list = new ArrayList<>();
+        for (HtmlDivision elem : divisions) {
+            //format type: HtmlDivision[<div id="" class="" data-url="/track" data-="" ..etc.]
+            String link = elem.toString().split(" ")[4].split("\"")[1];
+            list.add(link);
+        }
+        System.out.println("List length: //" + list.size());
+        list.forEach(System.out::println);
+
+        return list;
+    }
+
+    private void downloadTrack(String trackLink) {
+        String musicSourceUrl = properties.getProperty("MUSIC_URL");
+        //format type: /1*track/2*play/3*12711720/4*doja-cat-wont-bite-feat-smino.mp3
+        String FILE_URL = String.format("src/main/resources/music/%s", trackLink.split("/")[4]);
+        String COMPLETE_URL = musicSourceUrl + trackLink;
+
+        try (BufferedInputStream in = new BufferedInputStream(new URL(COMPLETE_URL).openStream());
+             FileOutputStream fileOutputStream = new FileOutputStream(FILE_URL)) {
+            byte dataBuffer[] = new byte[1024];
+            int bytesRead;
+            while ((bytesRead = in.read(dataBuffer, 0, 1024)) != -1) {
+                fileOutputStream.write(dataBuffer, 0, bytesRead);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
 }
 
