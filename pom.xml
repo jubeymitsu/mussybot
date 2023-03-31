@@ -33,15 +33,12 @@
             <version>3.0.0</version>
         </dependency>
 
-<<<<<<< HEAD
 <!--            The reason why logging works-->
 <!--        <dependency>-->
 <!--            <groupId>org.springframework.boot</groupId>-->
 <!--            <artifactId>spring-boot-starter-web</artifactId>-->
 <!--        </dependency>-->
 
-=======
->>>>>>> 38aaf644e52c393af7d9c3edb8253117474b7894
         <dependency>
             <groupId>com.github.pengrad</groupId>
             <artifactId>java-telegram-bot-api</artifactId>

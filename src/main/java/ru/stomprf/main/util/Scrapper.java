@@ -5,8 +5,6 @@ import org.htmlunit.html.*;
 import ru.stomprf.main.Track;
 
 import java.io.*;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -15,7 +13,15 @@ public class Scrapper {
 
     private HtmlPage page;
     private WebClient client;
-    private Properties properties = new Properties();
+    private static Properties properties = new Properties();
+
+    static {
+        try {
+            properties.load(new FileInputStream("src/main/resources/app.properties"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public Scrapper() {
         this.client = new WebClient();
@@ -28,13 +34,20 @@ public class Scrapper {
         }
     }
 
-    public List<Track> findFiveTracks(String search) {
+    public List<Track> findFiveTracks(String searchText) {
+
+        String[] searchElements = searchText.split(" ");
+        StringBuilder urlSearch = new StringBuilder();
+        for (int i = 0; i < searchElements.length; i++) {
+            urlSearch.append(searchElements[i]).append("%20");
+        }
         List<Track> tracks = new ArrayList<>();
         try {
             System.out.println(properties.getProperty("PATTERN") + "doja%20cat");
             page = client.getPage(properties.getProperty("PATTERN") + "doja%20cat");
             List<HtmlDivision> list = page.getByXPath("//div[contains(@class, \"playlist\")]//div[@data-url]");
-            downloadTrack(extractLinks(list).get(0));
+
+            new DownloadManager().downloadTrack(extractLinks(list).get(2));
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -43,35 +56,19 @@ public class Scrapper {
     }
 
     private List<String> extractLinks(List<HtmlDivision> divisions) {
-        ArrayList<String> list = new ArrayList<>();
+        ArrayList<String> links = new ArrayList<>();
+        String musicSourceUrl = properties.getProperty("MUSIC_URL");
         for (HtmlDivision elem : divisions) {
             //format type: HtmlDivision[<div id="" class="" data-url="/track" data-="" ..etc.]
-            String link = elem.toString().split(" ")[4].split("\"")[1];
-            list.add(link);
+            String trackSubLink = elem.toString().split(" ")[4].split("\"")[1];
+            String completeUrl = musicSourceUrl + trackSubLink;
+            links.add(completeUrl);
         }
-        System.out.println("List length: //" + list.size());
-        list.forEach(System.out::println);
+        System.out.println("List length: //" + links.size());
 
-        return list;
-    }
+        links.forEach(System.out::println);
 
-    private void downloadTrack(String trackLink) {
-        String musicSourceUrl = properties.getProperty("MUSIC_URL");
-        //format type: /1*track/2*play/3*12711720/4*doja-cat-wont-bite-feat-smino.mp3
-        String FILE_URL = String.format("src/main/resources/music/%s", trackLink.split("/")[4]);
-        String COMPLETE_URL = musicSourceUrl + trackLink;
-
-        try (BufferedInputStream in = new BufferedInputStream(new URL(COMPLETE_URL).openStream());
-             FileOutputStream fileOutputStream = new FileOutputStream(FILE_URL)) {
-            byte dataBuffer[] = new byte[1024];
-            int bytesRead;
-            while ((bytesRead = in.read(dataBuffer, 0, 1024)) != -1) {
-                fileOutputStream.write(dataBuffer, 0, bytesRead);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+        return links;
     }
 }
 

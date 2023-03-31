@@ -4,17 +4,8 @@ import java.nio.file.Path;
 
 public class Track {
 
-    private String artist;
     private String title;
     private Path location;
-
-    public String getArtist() {
-        return artist;
-    }
-
-    public void setArtist(String artist) {
-        this.artist = artist;
-    }
 
     public String getTitle() {
         return title;
