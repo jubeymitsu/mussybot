@@ -2,7 +2,6 @@ package ru.stomprf.main.util;
 
 import org.htmlunit.WebClient;
 import org.htmlunit.html.*;
-import ru.stomprf.main.Track;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -13,6 +12,7 @@ public class Scrapper {
 
     private HtmlPage page;
     private WebClient client;
+    private List<String> links;
     private static Properties properties = new Properties();
 
     static {
@@ -28,31 +28,35 @@ public class Scrapper {
         this.client.getOptions().setCssEnabled(false);
         this.client.getOptions().setJavaScriptEnabled(false);
         try {
-            this.properties.load(new FileInputStream("src/main/resources/app.properties"));
+            properties.load(new FileInputStream("src/main/resources/app.properties"));
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public List<Track> findFiveTracks(String searchText) {
-
+    public List<String> scrapLinks(String searchText, int numberOfTracks) {
         String[] searchElements = searchText.split(" ");
         StringBuilder urlSearch = new StringBuilder();
-        for (int i = 0; i < searchElements.length; i++) {
-            urlSearch.append(searchElements[i]).append("%20");
+        for (String searchElement : searchElements) {
+            urlSearch.append(searchElement).append("%20");
         }
-        List<Track> tracks = new ArrayList<>();
         try {
-            System.out.println(properties.getProperty("PATTERN") + "doja%20cat");
+//          System.out.println(properties.getProperty("PATTERN") + "doja%20cat");
+            //page = client.getPage(properties.getProperty("PATTERN") + "doja%20cat");
+            System.out.println(properties.getProperty("PATTERN") + urlSearch);
             page = client.getPage(properties.getProperty("PATTERN") + "doja%20cat");
-            List<HtmlDivision> list = page.getByXPath("//div[contains(@class, \"playlist\")]//div[@data-url]");
+            List<HtmlDivision> divList = page.getByXPath("//div[contains(@class, \"playlist\")]//div[@data-url]");
 
-            new DownloadManager().downloadTrack(extractLinks(list).get(2));
+            if (divList.size() == 0) {
+                System.out.println("No search results");
+                return links;
+            }
+            links = extractLinks(divList);
 
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return null;
+        return links.subList(0, ++numberOfTracks);
     }
 
     private List<String> extractLinks(List<HtmlDivision> divisions) {
@@ -65,7 +69,6 @@ public class Scrapper {
             links.add(completeUrl);
         }
         System.out.println("List length: //" + links.size());
-
         links.forEach(System.out::println);
 
         return links;

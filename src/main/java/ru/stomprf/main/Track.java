@@ -4,6 +4,11 @@ import java.nio.file.Path;
 
 public class Track {
 
+    public Track(String title, Path location) {
+        this.title = title;
+        this.location = location;
+    }
+
     private String title;
     private Path location;
 

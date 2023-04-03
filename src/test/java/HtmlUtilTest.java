@@ -19,8 +19,11 @@ public class HtmlUtilTest {
     }
 
     @Test
-    public void checkConnecntionAndForms(){
+    public void checkConnectionAndForms(){
         Scrapper scrapper = new Scrapper();
-        scrapper.findFiveTracks("Doja cat");
+        System.out.println("Final result: ");
+        for (String s: scrapper.scrapLinks("Doja cat", 5)) {
+            System.out.println(s);
+        }
     }
 }
