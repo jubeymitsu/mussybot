@@ -41,10 +41,9 @@ public class Scrapper {
             urlSearch.append(searchElement).append("%20");
         }
         try {
-//          System.out.println(properties.getProperty("PATTERN") + "doja%20cat");
-            //page = client.getPage(properties.getProperty("PATTERN") + "doja%20cat");
             System.out.println(properties.getProperty("PATTERN") + urlSearch);
-            page = client.getPage(properties.getProperty("PATTERN") + "doja%20cat");
+//            page = client.getPage(properties.getProperty("PATTERN") + "doja%20cat");
+            page = client.getPage(properties.getProperty("PATTERN") + urlSearch);
             List<HtmlDivision> divList = page.getByXPath("//div[contains(@class, \"playlist\")]//div[@data-url]");
 
             if (divList.size() == 0) {
@@ -56,7 +55,7 @@ public class Scrapper {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return links.subList(0, ++numberOfTracks);
+        return links.subList(0, numberOfTracks);
     }
 
     private List<String> extractLinks(List<HtmlDivision> divisions) {
@@ -69,7 +68,7 @@ public class Scrapper {
             links.add(completeUrl);
         }
         System.out.println("List length: //" + links.size());
-        links.forEach(System.out::println);
+//        links.forEach(System.out::println);
 
         return links;
     }

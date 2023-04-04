@@ -19,5 +19,4 @@ public class AppProperties {
     public static Properties getConfig() {
         return properties;
     }
-
 }

@@ -24,7 +24,6 @@ public class Bot {
                 Path path = Path.of("src/main/resources/music/doja-cat-rules.mp3");
                 bot.execute(new SendAudio(chatId, path.toFile()));
             });
-
             return UpdatesListener.CONFIRMED_UPDATES_ALL;
         });
     }

@@ -27,4 +27,12 @@ public class Track {
     public void setLocation(Path location) {
         this.location = location;
     }
+
+    @Override
+    public String toString() {
+        return "Track{" +
+                "title='" + title + '\'' +
+                ", location=" + location +
+                '}';
+    }
 }
