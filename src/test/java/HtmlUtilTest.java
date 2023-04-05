@@ -29,7 +29,7 @@ public class HtmlUtilTest {
     public void checkConnectionAndForms() {
         Scrapper scrapper = new Scrapper();
         System.out.println("Final result: ");
-        for (String s : scrapper.scrapLinks("Doja cat", 5)) {
+        for (String s : scrapper.scrapLinks("Doja cat", 7)) {
             int arrLength = s.split("/").length;
 //            trackSet.add(dM.downloadTrack(s));
             System.out.println("Track name: " + s.split("/")[arrLength - 1]);
