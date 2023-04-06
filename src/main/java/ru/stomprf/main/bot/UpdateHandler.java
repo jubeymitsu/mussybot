@@ -19,25 +19,26 @@ public class UpdateHandler {
     }
 
     private SendMessage handleInputMessage(Message message){
-        String inputMsg = message.text();
-        long userId = message.chat().id();
-        BotState botState;
-        SendMessage replyMessage;
-
-        switch (inputMsg) {
-            case "/start":
-                botState = BotState.ASK_TITLE;
-                break;
-            case "Получить предсказание":
-                botState = BotState.FILLING_PROFILE;
-                break;
-            case "Помощь":
-                botState = BotState.SHOW_HELP_MENU;
-                break;
-            default:
-                botState = userDataCache.getUsersCurrentBotState(userId);
-                break;
-        }
+//        String inputMsg = message.text();
+//        long userId = message.chat().id();
+//        BotState botState;
+//        SendMessage replyMessage;
+//
+//        switch (inputMsg) {
+//            case "/start":
+//                botState = BotState.ASK_TITLE;
+//                break;
+//            case "Получить предсказание":
+//                botState = BotState.FILLING_PROFILE;
+//                break;
+//            case "Помощь":
+//                botState = BotState.SHOW_HELP_MENU;
+//                break;
+//            default:
+//                botState = userDataCache.getUsersCurrentBotState(userId);
+//                break;
+//        }
+        return null;
     }
 
 }
