@@ -3,7 +3,7 @@ package ru.stomprf.main.bot;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
-import ru.stomprf.main.datastate.UserStateCache;
+import ru.stomprf.main.datacache.UserStateCache;
 
 public class UpdateHandler {
 

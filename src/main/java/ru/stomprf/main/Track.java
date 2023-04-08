@@ -4,12 +4,18 @@ import java.nio.file.Path;
 
 public class Track {
 
-    public Track(String title, Path location) {
+    public Track(String title, String downloadLink, Path location) {
         this.title = title;
+        this.downloadLink = downloadLink;
         this.location = location;
     }
 
+    public Track(){
+
+    }
+
     private String title;
+    private String downloadLink;
     private Path location;
 
     public String getTitle() {
@@ -28,10 +34,19 @@ public class Track {
         this.location = location;
     }
 
+    public String getDownloadLink() {
+        return downloadLink;
+    }
+
+    public void setDownloadLink(String downloadLink) {
+        this.downloadLink = downloadLink;
+    }
+
     @Override
     public String toString() {
         return "Track{" +
                 "title='" + title + '\'' +
+                ", downloadLink='" + downloadLink + '\'' +
                 ", location=" + location +
                 '}';
     }

@@ -1,4 +1,4 @@
-package ru.stomprf.main.datastate;
+package ru.stomprf.main.datacache;
 
 import ru.stomprf.main.bot.BotState;
 

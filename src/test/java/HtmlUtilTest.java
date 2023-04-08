@@ -7,12 +7,12 @@ import ru.stomprf.main.util.DownloadManager;
 import ru.stomprf.main.util.Scrapper;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 
 public class HtmlUtilTest {
 
-    private DownloadManager dM = new DownloadManager();
     private Set<Track> trackSet = new HashSet<>();
 
     @Test
@@ -27,15 +27,15 @@ public class HtmlUtilTest {
 
     @Test
     public void checkConnectionAndForms() {
+        System.out.println("Test started.");
         Scrapper scrapper = new Scrapper();
-        System.out.println("Final result: ");
-        for (String s : scrapper.scrapLinks("Doja cat", 7)) {
-            int arrLength = s.split("/").length;
-//            trackSet.add(dM.downloadTrack(s));
-            System.out.println("Track name: " + s.split("/")[arrLength - 1]);
+        List<Track> trackList = scrapper.scrapTracks("билан молния", 7);
+        if (!trackList.isEmpty()){
+            trackList.forEach(System.out::println);
+            System.out.println("Download track...");
+            DownloadManager.downloadTrack(trackList.get(0));
         }
-        System.out.println("--All tracks download successfully--");
-        System.out.println("Show results");
-        trackSet.forEach(System.out::println);
+        else
+            System.out.println("Tracklist empty :(");
     }
 }

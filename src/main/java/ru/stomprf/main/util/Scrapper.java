@@ -2,17 +2,18 @@ package ru.stomprf.main.util;
 
 import org.htmlunit.WebClient;
 import org.htmlunit.html.*;
+import ru.stomprf.main.Track;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
+import java.nio.file.Path;
+import java.util.*;
 
 public class Scrapper {
 
     private HtmlPage page;
     private WebClient client;
-    private List<String> links;
+    private List<Track> tracks = new ArrayList<>();
+    private List<String> links = new ArrayList<>();
     private static Properties properties = new Properties();
 
     static {
@@ -22,6 +23,9 @@ public class Scrapper {
             e.printStackTrace();
         }
     }
+
+    private final String MUSIC_SOURCE_URL = properties.getProperty("MUSIC_URL");
+    private final String DOWNLOAD_PATH = properties.getProperty("DOWNLOAD_PATH");
 
     public Scrapper() {
         this.client = new WebClient();
@@ -34,43 +38,45 @@ public class Scrapper {
         }
     }
 
-    public List<String> scrapLinks(String searchText, int numberOfTracks) {
+    public List<Track> scrapTracks(String searchText, int preferedNumberOfTracks) {
         String[] searchElements = searchText.split(" ");
         StringBuilder urlSearch = new StringBuilder();
+
         for (String searchElement : searchElements) {
             urlSearch.append(searchElement).append("%20");
         }
         try {
             System.out.println(properties.getProperty("PATTERN") + urlSearch);
-//            page = client.getPage(properties.getProperty("PATTERN") + "doja%20cat");
             page = client.getPage(properties.getProperty("PATTERN") + urlSearch);
             List<HtmlDivision> divList = page.getByXPath("//div[contains(@class, \"playlist\")]//div[@data-url]");
 
-            if (divList.size() == 0) {
+            if (divList.size() >= preferedNumberOfTracks)
+                return extractData(divList).subList(0, preferedNumberOfTracks);
+            else if (divList.size() == 0){
                 System.out.println("No search results");
-                return links;
+                return tracks;
             }
-            links = extractLinks(divList);
+            else
+                return extractData(divList);
 
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return links.subList(0, numberOfTracks);
+      return tracks;
     }
 
-    private List<String> extractLinks(List<HtmlDivision> divisions) {
-        ArrayList<String> links = new ArrayList<>();
-        String musicSourceUrl = properties.getProperty("MUSIC_URL");
+    private List<Track> extractData(List<HtmlDivision> divisions) {
         for (HtmlDivision elem : divisions) {
-            //format type: HtmlDivision[<div id="" class="" data-url="/track" data-="" ..etc.]
-            String trackSubLink = elem.toString().split(" ")[4].split("\"")[1];
-            String completeUrl = musicSourceUrl + trackSubLink;
-            links.add(completeUrl);
+            //format type: HtmlDivision[<div id="" class="" data-url="/track" data-="" ..etc.]\
+            tracks.add(buildTrack(elem.toString()));
         }
-        System.out.println("List length: //" + links.size());
-//        links.forEach(System.out::println);
+        return tracks;
+    }
 
-        return links;
+    private Track buildTrack(String div){
+        String trackTitle = div.split("data-title=")[1].split("\"")[1];
+        String trackLink = div.split(" ")[4].split("\"")[1];
+        return new Track(trackTitle, MUSIC_SOURCE_URL + trackLink, Path.of(DOWNLOAD_PATH + trackTitle + ".mp3"));
     }
 }
 
