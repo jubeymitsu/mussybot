@@ -4,7 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import ru.stomprf.main.Track;
 import ru.stomprf.main.util.DownloadManager;
-import ru.stomprf.main.util.Scrapper;
+import ru.stomprf.main.scrap.MusifyScraper;
 
 import java.util.HashSet;
 import java.util.List;
@@ -28,8 +28,8 @@ public class HtmlUtilTest {
     @Test
     public void checkConnectionAndForms() {
         System.out.println("Test started.");
-        Scrapper scrapper = new Scrapper();
-        List<Track> trackList = scrapper.scrapTracks("билан молния", 7);
+        MusifyScraper musifyScraper = new MusifyScraper();
+        List<Track> trackList = musifyScraper.scrapTracks("билан молния", 7);
         if (!trackList.isEmpty()){
             trackList.forEach(System.out::println);
             System.out.println("Download track...");

@@ -1,4 +1,4 @@
-package ru.stomprf.main.util;
+package ru.stomprf.main.bot;
 
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
@@ -6,7 +6,7 @@ import ru.stomprf.main.Track;
 
 import java.util.List;
 
-public class ScrapperKeyboard {
+public class ScraperKeyboard {
 
     public InlineKeyboardMarkup createTrackKeyboard(List<Track> tracks){
         InlineKeyboardMarkup inlineKeyboard = new InlineKeyboardMarkup();

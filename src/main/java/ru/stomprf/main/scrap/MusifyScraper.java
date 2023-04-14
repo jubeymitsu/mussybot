@@ -1,4 +1,4 @@
-package ru.stomprf.main.util;
+package ru.stomprf.main.scrap;
 
 import org.htmlunit.WebClient;
 import org.htmlunit.html.*;
@@ -8,7 +8,7 @@ import java.io.*;
 import java.nio.file.Path;
 import java.util.*;
 
-public class Scrapper {
+public class MusifyScraper implements Scraper{
 
     private HtmlPage page;
     private WebClient client;
@@ -27,7 +27,7 @@ public class Scrapper {
     private final String MUSIC_SOURCE_URL = properties.getProperty("MUSIC_URL");
     private final String DOWNLOAD_PATH = properties.getProperty("DOWNLOAD_PATH");
 
-    public Scrapper() {
+    public MusifyScraper() {
         this.client = new WebClient();
         this.client.getOptions().setCssEnabled(false);
         this.client.getOptions().setJavaScriptEnabled(false);
