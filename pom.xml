@@ -33,6 +33,13 @@
             <version>3.0.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>io.lindstrom</groupId>
+            <artifactId>m3u8-parser</artifactId>
+            <version>0.24</version>
+        </dependency>
+
+
 <!--            The reason why logging works-->
 <!--        <dependency>-->
 <!--            <groupId>org.springframework.boot</groupId>-->
