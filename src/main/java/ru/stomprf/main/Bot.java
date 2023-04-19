@@ -2,18 +2,12 @@ package ru.stomprf.main;
 
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
-import com.pengrad.telegrambot.model.CallbackQuery;
-import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
-import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
-import com.pengrad.telegrambot.request.AbstractSendRequest;
 import com.pengrad.telegrambot.request.SendAudio;
 import com.pengrad.telegrambot.request.SendMessage;
-import com.pengrad.telegrambot.response.SendResponse;
-import ru.stomprf.main.bot.CallbackUpdateHandler;
-import ru.stomprf.main.bot.UpdateHandler;
 import ru.stomprf.main.util.AppProperties;
 
 import java.io.IOException;
+import java.nio.file.Path;
 
 public class Bot {
 
@@ -23,42 +17,19 @@ public class Bot {
 
         bot.setUpdatesListener(updates -> {
             updates.forEach(update -> {
-//                long chatId = update.message().chat().id();
-//                SendResponse response = bot.execute(new SendMessage(chatId, "Hello!"));
+                Long chatId = update.message().chat().id();
 //
-//                Path path = Path.of("src/main/resources/music/doja-cat-rules.mp3");
-//                bot.execute(new SendAudio(chatId, path.toFile()));
-
-
-                //NEXT PART
-//                CallbackQuery callbackQuery = update.callbackQuery();
-//                if (callbackQuery != null) {
-//                    System.out.println("Callback message: " + callbackQuery.message().text());
-//                    System.out.println("Callback data: " + callbackQuery.data());
-//                    System.out.println("Callback message: " + callbackQuery.from());
-//                    System.out.println("Callback chat instance: " + callbackQuery.chatInstance());
-//                    System.out.println("Callback from: " + callbackQuery.from().username());
-//                } else {
-//                    System.out.println(update.message().text());
-//                    SendResponse response = bot.execute(new SendMessage(chatId, "Hello!"));
-//
-//                    InlineKeyboardMarkup inlineKeyboard = new InlineKeyboardMarkup()
-//                            .addRow(new InlineKeyboardButton("url").url("www.google.com"))
-//                            .addRow(new InlineKeyboardButton("yukmouth-bottom-bitch-feat-dubeeasdasdasdsadasdasdasdasd.mp3").callbackData("Doja asdasdsdasdasdascat : Like you"))
-//                            .addRow(new InlineKeyboardButton("Doja cat : Fuck yoy you").callbackData("Doja cat : Fuck you"));
-//                    bot.execute(new SendMessage(chatId, "Choose favorite track!").replyMarkup(inlineKeyboard))
-//             ;
-
-
-                AbstractSendRequest message;
-                if (update.callbackQuery() != null){
-                    message = new CallbackUpdateHandler().handleCallbackUpdate(update);
-                }
-                else
-                    message = new UpdateHandler().handleUpdate(update);
-
-                bot.execute(message);
-
+//                AbstractSendRequest message;
+//                if (update.callbackQuery() != null){
+//                    message = new CallbackUpdateHandler().handleCallbackUpdate(update);
+//                }
+//                else
+//                    message = new UpdateHandler().handleUpdate(update);
+                Path path = Path.of("src/main/resources/music/result.ts");
+                System.out.println(path.toString());
+                bot.execute(new SendMessage(chatId, "Hey! :?"));
+                bot.execute(new SendAudio(chatId, path.toFile()));
+                System.out.println("done");
             });
             return UpdatesListener.CONFIRMED_UPDATES_ALL;
         });
