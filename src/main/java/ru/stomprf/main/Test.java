@@ -9,9 +9,7 @@ import io.lindstrom.m3u8.parser.MediaPlaylistParser;
 import javax.crypto.*;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-import java.io.BufferedInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -20,9 +18,9 @@ import java.util.*;
 
 public class Test {
 
-    private final static String INDEX_URL = "https://cs9-14v4.vkuseraudio.net/s/v1/ac/ch7o4nC8axaeQ3GfgDLVjVNkL" +
-            "_oQeBxcL-RUAtqxeYe3h7r1V3ZervmO9sYlys8fkhrvuU13Fb6d47F_Iwy3R413e_IHzOhTxhqd8qZ5tZjoGn6Oas-UAkx9lw1BrRRHbFz" +
-            "Cu_D5pY77eGMXQz-cQFxQHaaiFYob5pIGjwaxNAmp1CU/index.m3u8";
+    private final static String INDEX_URL = "https://cs9-3v4.vkuseraudio.net/s/v1/ac/z63vUUhgu-gZRB" +
+            "dYEjaVBvWUVILR6Mtpdh0KSMyJyCWLdQmOiyqBHzc-2y7RnvW-pYeuyDZh7iLt0weOMFFQIk6o4WegumItAxXljeZMK" +
+            "djRZJ8sv9nZm_6KsSAodM0mlH0UicOlvjjIuvXLxDYzAgZV9LoCwp3XCeQfEY7y-1HsjnU/index.m3u8";
     private final static String PATH_TO_TS_FILE = "./src/main/resources/music/result.ts";
 
     public static void main(String[] args) throws IOException, NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
@@ -48,25 +46,22 @@ public class Test {
             } else
                 segmentsData.put(segmentUri, new SegmentDao(false, ""));
         });
-//        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
-        // CLOSE CONNECTIONS!
         System.out.println("Downloading...");
         byte[] downloadedSegment;
         byte[] key;
         byte[] iv;
         byte[] cipheredData;
         byte[] decryptData;
-        FileOutputStream fOS = new FileOutputStream(PATH_TO_TS_FILE);
+        BufferedOutputStream bufferedOS = new BufferedOutputStream(new FileOutputStream(PATH_TO_TS_FILE));
 
         for (Map.Entry<String, SegmentDao> s : segmentsData.entrySet()) {
-
             //Download segment
             BufferedInputStream bufferedInputStream = new BufferedInputStream(new URL(INDEX_URL.replace("index.m3u8", s.getKey())).openStream());
-            if (s.getValue().isHasMethod()) {
-                downloadedSegment = bufferedInputStream.readAllBytes();
-                bufferedInputStream.close();
+            downloadedSegment = bufferedInputStream.readAllBytes();
+            bufferedInputStream.close();
 
+            if (s.getValue().isHasMethod()) {
                 //Download key for segment if exists
                 bufferedInputStream = new BufferedInputStream(new URL(s.getValue().getMethodUri()).openStream());
                 key = bufferedInputStream.readAllBytes();
@@ -78,17 +73,14 @@ public class Test {
 
                 //Decrypt ciphered data
                 decryptData = decrypt("AES/CBC/PKCS5Padding", cipheredData, new SecretKeySpec(key, "AES"), new IvParameterSpec(iv));
-                fOS.write(decryptData);
+                bufferedOS.write(decryptData);
 
             } else {
-                fOS.write(bufferedInputStream.readAllBytes());
-//
-                bufferedInputStream.close();
+                bufferedOS.write(downloadedSegment);
             }
-
-            System.out.println("All elements are downloaded!");
-            System.out.println("Write to file!");
         }
+        System.out.println("All elements are downloaded!");
+        System.out.println("Write to file!");
     }
 
     public static byte[] decrypt(String algorithm, byte[] cipherText, SecretKey key, IvParameterSpec iv) throws NoSuchPaddingException, NoSuchAlgorithmException,
@@ -100,7 +92,7 @@ public class Test {
         return cipher.doFinal(cipherText);
     }
 
-    class SegmentDao{
+    static class SegmentDao{
         private boolean hasMethod;
         private String methodUri;
 
